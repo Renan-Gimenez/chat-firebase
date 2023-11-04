@@ -1,11 +1,11 @@
 "use client"
 import { createContext, useEffect, useState } from "react";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { Timestamp, addDoc, collection, getDocs, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "@/service/firebase";
 
 interface MessageContextType {
     messages: [];
-    sendMessage: () => void;
+    sendMessage: (message:string, user:any) => void;
     getMessages: () => void;
 }
 
@@ -13,7 +13,7 @@ export const MessageContext = createContext<MessageContextType>({} as MessageCon
 
 export const MessageProvider = ({ children }:any) => {
     const [messages, setMessages] = useState([]);
-    
+
     async function sendMessage(message:string, user:any) {
         if (message.trim() === '') {
             alert('Preencha o campo de mensagem');
@@ -22,6 +22,7 @@ export const MessageProvider = ({ children }:any) => {
     
         try {
             const docRef = await addDoc(collection(db, 'messages'), {
+                createdAt: Timestamp.now(),
                 profilePicture: `${user.photoURL}`,
                 text: `${message}`,
                 user: `${user.displayName}`,
@@ -30,8 +31,6 @@ export const MessageProvider = ({ children }:any) => {
         } catch (error) {
             console.log(error);
         }
-    
-        getMessages();
     }
 
     async function getMessages() {
@@ -42,9 +41,19 @@ export const MessageProvider = ({ children }:any) => {
         };
     }
 
+    const messagesRef = collection(db, 'messages');
     useEffect(() => {
-        getMessages();
-        console.log("Render");
+        const queryMessages = query(messagesRef, orderBy('createdAt'));
+        const unsuscribe = onSnapshot(queryMessages, (snapshot) => {
+            let messages = [];
+            snapshot.forEach((doc) => {
+                messages.push({ ...doc.data(), id: doc.id });
+            });
+            setMessages(messages);
+        });
+        
+        console.log("Render Snapshot");
+        return () => unsuscribe();
     }, [])
 
     return (
