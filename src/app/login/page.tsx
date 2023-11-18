@@ -4,39 +4,20 @@ import Link from "next/link";
 import { AuthContext } from "@/context/AuthContext";
 
 import { Lock, Mail } from "lucide-react";
-import { BsGithub, BsGoogle } from "react-icons/bs";
+import { BsGoogle } from "react-icons/bs";
 import SocialLoginButton from "@/components/SocialLoginButton";
 import Input from "@/components/Input";
-import { auth } from "@/service/firebase";
 
 export default function Login() {
-  const {
-    user,
-    signInWithGoogle,
-    handleSignInWithEmailAndPassword,
-    loadingUserState,
-  } = useContext(AuthContext);
+  const { signInWithGoogle, handleSignInWithEmailAndPassword } =
+    useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const loadingScreen = () => {
-    return (
-      <div className="h-screen w-screen text-white bg-gray-900">
-        <h1 className="text-white">LOADING...</h1>
-      </div>
-    );
-  };
-
-  {
-    loadingUserState && loadingScreen;
-  }
 
   return (
     <main className="min-h-screen w-screen flex items-center justify-center gap-16 px-[5%] dark:bg-gray-900">
       <div className="w-full max-w-sm bg-gray-200 dark:bg-gray-800 p-8 rounded-lg">
-        <span>{user?.displayName}</span>
         <h1 className="text-2xl font-bold text-center mb-8">Login Page</h1>
-        {/* <h1>{loadingUserState === true ? "IS LOADING" : "IS NOT LOADING"}</h1> */}
         <form
           action="#"
           className="flex flex-col items-center gap-2"
@@ -67,7 +48,7 @@ export default function Login() {
             Forgot my password
           </Link>
 
-          <button className="w-full bg-violet-500 px-4 py-2 rounded-lg transition-all hover:tracking-wider">
+          <button className="w-full text-white bg-violet-500 px-4 py-2 rounded-lg transition-all hover:tracking-wider">
             Login
           </button>
         </form>
@@ -91,7 +72,6 @@ export default function Login() {
             text={"Sign in With Google"}
             onClick={signInWithGoogle}
           />
-          {/* <SocialLoginButton icon={<BsGithub />} text={"Sign in With GitHub"} onClick={signInWithGoogle} /> */}
         </div>
       </div>
     </main>
