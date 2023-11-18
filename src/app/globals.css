@@ -8,31 +8,29 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.dark {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
 }
 
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   width: 10px;
-}
+} */
 
-::-webkit-scrollbar-track {
-  /* background: #f1f1f1; */
-}
+/* ::-webkit-scrollbar-track {
+  background: #f1f1f1;
+} */
 
-::-webkit-scrollbar-thumb {
+/* ::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 5px;
-}
+} */
 
-::-webkit-scrollbar-thumb:hover {
+/* ::-webkit-scrollbar-thumb:hover {
   background: #555;
-}
+} */
