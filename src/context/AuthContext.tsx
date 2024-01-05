@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -26,7 +26,7 @@ export const AuthContext = createContext<AuthContextType>(
 
 export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loadingUserState, setLoadingUserState] = useState(false);
+  const [loadingUserState, setLoadingUserState] = useState(true);
   const router = useRouter();
 
   const signInWithGoogle = async () => {
@@ -74,19 +74,34 @@ export const AuthProvider = ({ children }: any) => {
     router.push("/login");
   };
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+  const userStateChanged = useCallback(
+    (currentUser: User | null) => {
+      console.log("USER STATE CHANGED", currentUser);
+      setUser(currentUser);
       if (!currentUser) {
         router.push("/login");
-        return;
+      } else {
+        router.push("/");
+        setLoadingUserState(false);
       }
-      setUser(currentUser);
-      router.push("/");
+    },
+    [router]
+  );
+
+  useEffect(() => {
+    console.log("USE EFFECT");
+
+    setLoadingUserState(true);
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      userStateChanged(user);
     });
     console.log("RENDER AUTH STATE");
 
     return () => unsubscribe();
-  }, [router, user]);
+  }, [router, userStateChanged]);
+
+  console.log({ loadingUserState });
 
   return (
     <AuthContext.Provider
