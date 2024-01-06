@@ -121,6 +121,7 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   const logOut = () => {
+    setLoadingUserState(true);
     signOut(auth);
 
     console.log("USER AFTER LOGOUT:", user);
