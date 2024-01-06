@@ -62,15 +62,22 @@ export const AuthProvider = ({ children }: any) => {
         router.push("/");
       })
       .catch((error) => {
-        if (error.code === "auth/invalid-login-credentials") {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        if (errorCode === "auth/invalid-login-credentials") {
           return alert("Invalid login credentials");
         }
 
-        if (error.code === "auth/invalid-email") {
+        if (errorCode === "auth/invalid-email") {
           return alert("Invalid Email");
         }
 
-        console.log(error);
+        if (errorCode === "auth/missing-password") {
+          return alert("Missing password");
+        }
+
+        alert(`"Error: " ${errorMessage}`);
       });
   };
 
