@@ -8,7 +8,9 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "@/service/firebase";
 
@@ -16,6 +18,11 @@ interface AuthContextType {
   user: User | null;
   signInWithGoogle: () => void;
   handleSignInWithEmailAndPassword: (email: string, password: string) => void;
+  handleSignUpWithEmailAndPassword: (
+    email: string,
+    password: string,
+    username: string
+  ) => void;
   logOut: () => void;
   loadingUserState: boolean;
 }
@@ -67,6 +74,52 @@ export const AuthProvider = ({ children }: any) => {
       });
   };
 
+  const handleSignUpWithEmailAndPassword = (
+    email: string,
+    password: string,
+    username: string
+  ) => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        const defaultPhotoURL =
+          "http://s3.amazonaws.com/37assets/svn/765-default-avatar.png";
+        if (auth.currentUser != null) {
+          updateProfile(auth.currentUser, {
+            displayName: username,
+            photoURL: defaultPhotoURL,
+          }).then(() => console.log("Account Created: ", username, email));
+        }
+      })
+      .catch((error) => {
+        if (error) {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+
+          if (errorCode === "auth/email-already-in-use") {
+            return alert("Email already in use");
+          }
+
+          if (errorCode === "auth/invalid-email") {
+            return alert("Invalid email");
+          }
+
+          if (errorCode === "auth/weak-password") {
+            return alert("Weak password");
+          }
+
+          if (errorCode === "auth/missing-email") {
+            return alert("Missing email");
+          }
+
+          if (errorCode === "auth/missing-password") {
+            return alert("Missing password");
+          }
+
+          alert(`"Error: " ${errorMessage}`);
+        }
+      });
+  };
+
   const logOut = () => {
     signOut(auth);
 
@@ -109,6 +162,7 @@ export const AuthProvider = ({ children }: any) => {
         user,
         signInWithGoogle,
         handleSignInWithEmailAndPassword,
+        handleSignUpWithEmailAndPassword,
         logOut,
         loadingUserState,
       }}
