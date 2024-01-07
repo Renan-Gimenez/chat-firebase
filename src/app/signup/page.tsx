@@ -122,13 +122,11 @@ export default function SignUp() {
           <div className="h-[1px] w-full bg-zinc-500"></div>
         </div>
 
-        <div className="flex flex-col items-center gap-2">
-          <SocialLoginButton
-            icon={<BsGoogle />}
-            text={"Sign in With Google"}
-            onClick={signInWithGoogle}
-          />
-        </div>
+        <SocialLoginButton
+          icon={<BsGoogle />}
+          text={"Sign in With Google"}
+          onClick={signInWithGoogle}
+        />
       </div>
     </main>
   );
