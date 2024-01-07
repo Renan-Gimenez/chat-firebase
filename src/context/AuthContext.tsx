@@ -9,6 +9,7 @@ import {
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   signOut,
   updateProfile,
 } from "firebase/auth";
@@ -23,6 +24,7 @@ interface AuthContextType {
     password: string,
     username: string
   ) => void;
+  handleResetPassword: (email: string) => void;
   logOut: () => void;
   loadingUserState: boolean;
 }
@@ -77,6 +79,10 @@ export const AuthProvider = ({ children }: any) => {
           return alert("Missing password");
         }
 
+        if (errorCode === "auth/network-request-failed") {
+          return alert("Network Request Failed");
+        }
+
         alert(`"Error: " ${errorMessage}`);
       });
   };
@@ -122,8 +128,37 @@ export const AuthProvider = ({ children }: any) => {
             return alert("Missing password");
           }
 
+          if (errorCode === "auth/network-request-failed") {
+            return alert("Network Request Failed");
+          }
+
           alert(`"Error: " ${errorMessage}`);
         }
+      });
+  };
+
+  const handleResetPassword = (email: string) => {
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        alert("A password reset link has been sent to your email");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        if (errorCode === "auth/invalid-email") {
+          return alert("Invalid Email");
+        }
+
+        if (errorCode === "auth/missing-email") {
+          return alert("Missing Email");
+        }
+
+        if (errorCode === "auth/network-request-failed") {
+          return alert("Network Request Failed");
+        }
+
+        alert(`Error: ${errorMessage}`);
       });
   };
 
@@ -171,6 +206,7 @@ export const AuthProvider = ({ children }: any) => {
         signInWithGoogle,
         handleSignInWithEmailAndPassword,
         handleSignUpWithEmailAndPassword,
+        handleResetPassword,
         logOut,
         loadingUserState,
       }}

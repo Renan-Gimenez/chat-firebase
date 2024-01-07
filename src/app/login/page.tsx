@@ -44,7 +44,10 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <Link href="/login" className="text-violet-500 mr-auto pb-3 text-sm">
+          <Link
+            href="/resetPassword"
+            className="text-violet-500 mr-auto pb-3 text-sm"
+          >
             Forgot my password
           </Link>
 
@@ -66,13 +69,11 @@ export default function Login() {
           <div className="h-[1px] w-full bg-zinc-500"></div>
         </div>
 
-        <div className="flex flex-col items-center gap-2">
-          <SocialLoginButton
-            icon={<BsGoogle />}
-            text={"Sign in With Google"}
-            onClick={signInWithGoogle}
-          />
-        </div>
+        <SocialLoginButton
+          icon={<BsGoogle />}
+          text={"Sign in With Google"}
+          onClick={signInWithGoogle}
+        />
       </div>
     </main>
   );
