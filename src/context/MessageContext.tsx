@@ -2,13 +2,11 @@
 import { createContext, useEffect, useState } from "react";
 import { db } from "@/service/firebase";
 import {
-  DocumentData,
   Query,
   QuerySnapshot,
   Timestamp,
   addDoc,
   collection,
-  getDocs,
   onSnapshot,
   orderBy,
   query,
@@ -27,7 +25,6 @@ interface MessageType {
 interface MessageContextType {
   messages: MessageType[];
   sendMessage: (message: string, user: any) => void;
-  getMessages: () => void;
 }
 
 export const MessageContext = createContext<MessageContextType>(
@@ -57,23 +54,6 @@ export const MessageProvider = ({ children }: any) => {
     }
   }
 
-  async function getMessages() {
-    try {
-      const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(
-        collection(db, "messages")
-      );
-
-      setMessages(
-        querySnapshot.docs.map((doc) => ({
-          ...(doc.data() as MessageType),
-          id: doc.id,
-        }))
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   useEffect(() => {
     const queryMessages = query(
       collection(db, "messages"),
@@ -96,7 +76,7 @@ export const MessageProvider = ({ children }: any) => {
   }, []);
 
   return (
-    <MessageContext.Provider value={{ messages, sendMessage, getMessages }}>
+    <MessageContext.Provider value={{ messages, sendMessage }}>
       {children}
     </MessageContext.Provider>
   );
