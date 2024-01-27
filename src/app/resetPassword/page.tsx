@@ -32,6 +32,7 @@ export default function ResetPassword() {
           onSubmit={(e) => {
             e.preventDefault();
             handleResetPassword(email);
+            setEmail("");
           }}
         >
           <Input
