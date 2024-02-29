@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }: any) => {
       .then(({ user }) => {
         setUser(user);
 
-        console.log(user);
+        // console.log(user);
         router.push("/");
       })
       .catch((error) => {
@@ -96,11 +96,13 @@ export const AuthProvider = ({ children }: any) => {
       .then(() => {
         const defaultPhotoURL =
           "http://s3.amazonaws.com/37assets/svn/765-default-avatar.png";
+
         if (auth.currentUser != null) {
           updateProfile(auth.currentUser, {
             displayName: username,
             photoURL: defaultPhotoURL,
-          }).then(() => console.log("Account Created: ", username, email));
+          });
+          // .then(() => console.log("Account Created: ", username, email));
         }
       })
       .catch((error) => {
@@ -166,14 +168,16 @@ export const AuthProvider = ({ children }: any) => {
     setLoadingUserState(true);
     signOut(auth);
 
-    console.log("USER AFTER LOGOUT:", user);
+    // console.log("USER AFTER LOGOUT:", user);
     router.push("/login");
   };
 
   const userStateChanged = useCallback(
     (currentUser: User | null) => {
-      console.log("USER STATE CHANGED", currentUser);
+      // console.log("USER STATE CHANGED", currentUser);
+
       setUser(currentUser);
+
       if (!currentUser) {
         router.push("/login");
       } else {
@@ -185,19 +189,19 @@ export const AuthProvider = ({ children }: any) => {
   );
 
   useEffect(() => {
-    console.log("USE EFFECT");
+    // console.log("USE EFFECT");
 
     setLoadingUserState(true);
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       userStateChanged(user);
     });
-    console.log("RENDER AUTH STATE");
+    // console.log("RENDER AUTH STATE");
 
     return () => unsubscribe();
   }, [router, userStateChanged]);
 
-  console.log({ loadingUserState });
+  // console.log({ loadingUserState });
 
   return (
     <AuthContext.Provider

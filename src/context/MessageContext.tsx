@@ -48,7 +48,7 @@ export const MessageProvider = ({ children }: any) => {
         user: user.displayName,
         userUid: user.uid,
       });
-      console.log("Document written with ID:", docRef.id);
+      // console.log("Document written with ID:", docRef.id);
     } catch (error) {
       console.log(error);
     }
@@ -71,7 +71,7 @@ export const MessageProvider = ({ children }: any) => {
       }
     );
 
-    console.log("Render Snapshot");
+    // console.log("Render Snapshot");
     return () => unsubscribe();
   }, []);
 
